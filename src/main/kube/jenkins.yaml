@@ -1,0 +1,133 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: jenkins
+  name: jenkins-home
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: jenkins
+  name: maven-repo
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: jenkins
+  name: jenkins-master
+  labels:
+    app: jenkins
+    role: master
+spec:
+  selector:
+    matchLabels:
+      app: jenkins
+      role: master
+  template:
+    metadata:
+      labels:
+        app: jenkins
+        role: master
+    spec:
+      serviceAccountName: jenkins
+      volumes:
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins-home
+      initContainers:
+      - name: jenkins-home-init
+        image: alpine:3.9.5
+        volumeMounts:
+        - mountPath: "/var/jenkins_home"
+          name: jenkins-home
+        command: ['chown', '1000:1000', '/var/jenkins_home']
+      containers:
+      - name: jenkins-master
+        image: jenkins/jenkins:2.219-alpine
+        volumeMounts:
+        - mountPath: "/var/jenkins_home"
+          name: jenkins-home
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+  replicas: 1
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: jenkins
+  name: jenkins
+  labels:
+    app: jenkins
+spec:
+  type: LoadBalancer
+  selector:
+    app: jenkins
+    role: master
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: jenkins
+  name: jenkins-tunnel
+  labels:
+    app: jenkins
+spec:
+  type: ClusterIP
+  selector:
+    app: jenkins
+    role: master
+  ports:
+  - name: tunnel
+    protocol: TCP
+    port: 50000
+    targetPort: 50000
+
+# ---
+# kind: ManagedCertificate
+# apiVersion: networking.gke.io/v1beta1
+# metadata:
+#   namespace: jenkins
+#   name: jenkins-certificate
+# spec:
+#   domains:
+#   - jenkins.dev.yashkov.org
+
+# ---
+# kind: Ingress
+# apiVersion: extensions/v1beta1
+# metadata:
+#   namespace: jenkins
+#   name: dev
+#   annotations:
+#     # networking.gke.io/managed-certificates: jenkins-certificate
+# spec:
+#   backend:
+#     serviceName: jenkins
+#     servicePort: 80

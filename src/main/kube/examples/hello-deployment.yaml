@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello
+  labels:
+    app: hello
+spec:
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+#      volumes:
+#      - name: home
+#        nfs:
+#          server: theserver
+#          path: "/volume2/homes"
+      containers:
+      - name: hello
+        image: gcr.io/hello-minikube-zero-install/hello-node
+#        volumeMounts:
+#        - mountPath: "/home"
+#          name: home
+    replicas: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello
+  labels:
+    app: hello
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP

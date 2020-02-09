@@ -1,0 +1,18 @@
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: jenkins-home
+  labels:
+    app: jenkins
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  volumeMode: Filesystem
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  gcePersistentDisk:
+    pdName: jenkins-home
+    fsType: ext4

@@ -1,0 +1,29 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: hhvm
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: home
+            hostPath:
+              path: "/Users/user"
+          containers:
+          - name: hhvm
+            image: maven:3-jdk-13-alpine
+            args:
+            - mvn
+            - clean
+            - install
+            volumeMounts:
+            - mountPath: "/root"
+              name: home
+            workingDir: "/root/src/hhvm"
+          restartPolicy: Never

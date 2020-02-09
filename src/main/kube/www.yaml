@@ -1,0 +1,65 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: default
+  name: www
+  labels:
+    app: www
+spec:
+  selector:
+    matchLabels:
+      app: www
+  template:
+    metadata:
+      labels:
+        app: www
+    spec:
+      containers:
+      - name: www
+        image: gcr.io/yashkov/web-site:latest
+        ports:
+        - containerPort: 80
+  replicas: 1
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: default
+  name: www
+  labels:
+    app: www
+spec:
+  type: NodePort
+  selector:
+    app: www
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+
+---
+kind: ManagedCertificate
+apiVersion: networking.gke.io/v1beta1
+metadata:
+  namespace: default
+  name: www-certificate
+spec:
+  domains:
+  - www.yashkov.org
+
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  namespace: default
+  name: www
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: main
+    networking.gke.io/managed-certificates: www-certificate
+spec:
+  backend:
+    serviceName: www
+    servicePort: 80
