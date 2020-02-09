@@ -69,6 +69,10 @@ spec:
         ports:
         - containerPort: 8080
         - containerPort: 50000
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: 8080
   replicas: 1
 
 ---
@@ -80,7 +84,7 @@ metadata:
   labels:
     app: jenkins
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: jenkins
     role: master
@@ -119,15 +123,15 @@ spec:
 #   domains:
 #   - jenkins.dev.yashkov.org
 
-# ---
-# kind: Ingress
-# apiVersion: extensions/v1beta1
-# metadata:
-#   namespace: dev
-#   name: dev
-#   annotations:
-#     # networking.gke.io/managed-certificates: jenkins-certificate
-# spec:
-#   backend:
-#     serviceName: jenkins
-#     servicePort: 80
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  namespace: dev
+  name: dev
+  annotations:
+    # networking.gke.io/managed-certificates: jenkins-certificate
+spec:
+  backend:
+    serviceName: jenkins
+    servicePort: 80
