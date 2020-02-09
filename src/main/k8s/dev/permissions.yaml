@@ -1,21 +1,15 @@
 ---
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: jenkins
-
----
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  namespace: jenkins
+  namespace: dev
   name: jenkins
 
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  namespace: jenkins
+  namespace: dev
   name: jenkins
 rules:
 - apiGroups: [""]
@@ -35,7 +29,7 @@ rules:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
-  namespace: jenkins
+  namespace: dev
   name: jenkins
 roleRef:
   apiGroup: rbac.authorization.k8s.io
