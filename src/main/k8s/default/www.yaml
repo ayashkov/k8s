@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: www
-        image: gcr.io/yashkov/web-site:latest
+        image: gcr.io/yashkov/web-site:5
         ports:
         - containerPort: 80
   replicas: 1
