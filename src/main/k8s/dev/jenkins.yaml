@@ -83,15 +83,25 @@ metadata:
   name: jenkins
   labels:
     app: jenkins
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "http"
+    service.beta.kubernetes.io/do-loadbalancer-algorithm: "round_robin"
+    service.beta.kubernetes.io/do-loadbalancer-tls-ports: "443"
+    service.beta.kubernetes.io/do-loadbalancer-certificate-id: "jenkins-dev"
+    service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https: "true"
 spec:
   type: LoadBalancer
   selector:
     app: jenkins
     role: master
   ports:
-  - name: web
+  - name: http
     protocol: TCP
     port: 80
+    targetPort: 8080
+  - name: https
+    protocol: TCP
+    port: 443
     targetPort: 8080
 
 ---
