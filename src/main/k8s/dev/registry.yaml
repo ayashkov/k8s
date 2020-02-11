@@ -34,14 +34,26 @@ spec:
       - name: registry
         persistentVolumeClaim:
           claimName: registry
+      - name: certs
+        secret:
+          secretName: registry-cert
       containers:
       - name: registry
         image: registry:2.7.1
         volumeMounts:
         - mountPath: "/var/lib/registry"
           name: registry
+        - mountPath: "/etc/certs"
+          name: certs
+        env:
+        - name: "REGISTRY_HTTP_ADDR"
+          value: "0.0.0.0:5433"
+        - name: "REGISTRY_HTTP_TLS_CERTIFICATE"
+          value: "/etc/certs/tls.crt"
+        - name: "REGISTRY_HTTP_TLS_KEY"
+          value: "/etc/certs/tls.key"
         ports:
-        - containerPort: 5000
+        - containerPort: 5433
   replicas: 1
 
 ---
@@ -57,7 +69,7 @@ spec:
   selector:
     app: registry
   ports:
-  - name: http
+  - name: https
     protocol: TCP
-    port: 5000
-    targetPort: 5000
+    port: 5433
+    targetPort: 5433

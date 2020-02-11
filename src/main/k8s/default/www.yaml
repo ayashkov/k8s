@@ -17,9 +17,15 @@ spec:
     spec:
       containers:
       - name: www
-        image: gcr.io/yashkov/web-site:5
+        # image: registry.dev.svc.cluster.local:5433/yashkov/web-site:4
+        image: nginx
         ports:
         - containerPort: 80
+      - name: debug
+        image: busybox
+        tty: true
+        command:
+        - cat
   replicas: 1
 
 ---
@@ -30,8 +36,14 @@ metadata:
   name: www
   labels:
     app: www
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "http"
+    service.beta.kubernetes.io/do-loadbalancer-algorithm: "round_robin"
+    service.beta.kubernetes.io/do-loadbalancer-tls-ports: "443"
+    service.beta.kubernetes.io/do-loadbalancer-certificate-id: "le-yashkov-org"
+    service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https: "true"
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: www
   ports:
@@ -39,27 +51,7 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
-
-# ---
-# kind: ManagedCertificate
-# apiVersion: networking.gke.io/v1beta1
-# metadata:
-#   namespace: default
-#   name: www-certificate
-# spec:
-#   domains:
-#   - www.yashkov.org
-
----
-kind: Ingress
-apiVersion: extensions/v1beta1
-metadata:
-  namespace: default
-  name: www
-  # annotations:
-  #   kubernetes.io/ingress.global-static-ip-name: main
-  #   networking.gke.io/managed-certificates: www-certificate
-spec:
-  backend:
-    serviceName: www
-    servicePort: 80
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: 80
