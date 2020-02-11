@@ -47,13 +47,13 @@ spec:
           name: certs
         env:
         - name: "REGISTRY_HTTP_ADDR"
-          value: "0.0.0.0:5433"
+          value: "0.0.0.0:443"
         - name: "REGISTRY_HTTP_TLS_CERTIFICATE"
           value: "/etc/certs/tls.crt"
         - name: "REGISTRY_HTTP_TLS_KEY"
           value: "/etc/certs/tls.key"
         ports:
-        - containerPort: 5433
+        - containerPort: 443
   replicas: 1
 
 ---
@@ -71,5 +71,5 @@ spec:
   ports:
   - name: https
     protocol: TCP
-    port: 5433
-    targetPort: 5433
+    port: 443
+    targetPort: 443
