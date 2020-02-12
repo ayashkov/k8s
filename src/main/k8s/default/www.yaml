@@ -17,12 +17,12 @@ spec:
     spec:
       containers:
       - name: www
-        # image: registry.dev.svc.cluster.local:5433/yashkov/web-site:4
+        # image: registry.dev.svc.cluster.local/yashkov/web-site:9
         image: nginx
         ports:
         - containerPort: 80
       - name: debug
-        image: busybox
+        image: alpine:3.11.3
         tty: true
         command:
         - cat

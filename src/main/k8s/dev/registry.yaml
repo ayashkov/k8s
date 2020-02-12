@@ -14,6 +14,55 @@ spec:
       storage: 1Gi
 
 ---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: dev
+  name: registry
+data:
+  config.yml: |
+    version: 0.1
+    log:
+      accesslog:
+        disabled: true
+      level: info
+      formatter: text
+      fields:
+        service: registry
+        environment: production
+    storage:
+      filesystem:
+        rootdirectory: /var/lib/registry
+        maxthreads: 100
+      cache:
+        blobdescriptor: inmemory
+      delete:
+        enabled: true
+      redirect:
+        disable: true
+      maintenance:
+        uploadpurging:
+          enabled: true
+          age: 168h
+          interval: 24h
+          dryrun: false
+        readonly:
+          enabled: false
+    auth:
+      htpasswd:
+        realm: registry
+        path: /etc/docker/registry/htpasswd
+    http:
+      addr: :5000
+      headers:
+        X-Content-Type-Options: [nosniff]
+    health:
+      storagedriver:
+        enabled: true
+        interval: 10s
+        threshold: 3
+
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -31,29 +80,26 @@ spec:
         app: registry
     spec:
       volumes:
+      - name: config
+        projected:
+          sources:
+          - configMap:
+              name: registry
+          - secret:
+              name: registry-htpasswd
       - name: registry
         persistentVolumeClaim:
           claimName: registry
-      - name: certs
-        secret:
-          secretName: registry-cert
       containers:
       - name: registry
         image: registry:2.7.1
         volumeMounts:
+        - mountPath: "/etc/docker/registry"
+          name: config
         - mountPath: "/var/lib/registry"
           name: registry
-        - mountPath: "/etc/certs"
-          name: certs
-        env:
-        - name: "REGISTRY_HTTP_ADDR"
-          value: "0.0.0.0:443"
-        - name: "REGISTRY_HTTP_TLS_CERTIFICATE"
-          value: "/etc/certs/tls.crt"
-        - name: "REGISTRY_HTTP_TLS_KEY"
-          value: "/etc/certs/tls.key"
         ports:
-        - containerPort: 443
+        - containerPort: 5000
   replicas: 1
 
 ---
@@ -64,12 +110,19 @@ metadata:
   name: registry
   labels:
     app: registry
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "http"
+    service.beta.kubernetes.io/do-loadbalancer-algorithm: "round_robin"
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: registry
   ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 5000
   - name: https
     protocol: TCP
     port: 443
-    targetPort: 443
+    targetPort: 5000
