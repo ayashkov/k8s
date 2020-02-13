@@ -5571,7 +5571,6 @@ kind: ServiceAccount
 metadata:
   name: cert-manager
   namespace: "cert-manager"
-  annotations:
   labels:
     app: cert-manager
     app.kubernetes.io/name: cert-manager
@@ -6261,7 +6260,6 @@ spec:
         app.kubernetes.io/instance: cert-manager
         app.kubernetes.io/managed-by: Tiller
         helm.sh/chart: cert-manager-v0.13.0
-      annotations:
     spec:
       serviceAccountName: cert-manager-cainjector
       containers:
@@ -6278,7 +6276,6 @@ spec:
                 fieldPath: metadata.namespace
           resources:
             {}
-
 
 ---
 # Source: cert-manager/templates/deployment.yaml
@@ -6370,7 +6367,6 @@ spec:
         app.kubernetes.io/instance: cert-manager
         app.kubernetes.io/managed-by: Tiller
         helm.sh/chart: cert-manager-v0.13.0
-      annotations:
     spec:
       serviceAccountName: cert-manager-webhook
       containers:
@@ -6441,48 +6437,9 @@ webhooks:
         name: cert-manager-webhook
         namespace: "cert-manager"
         path: /mutate
----
-# Source: cert-manager/templates/cainjector-psp-clusterrole.yaml
 
-
----
-# Source: cert-manager/templates/cainjector-psp-clusterrolebinding.yaml
-
-
----
-# Source: cert-manager/templates/cainjector-psp.yaml
-
-
----
-# Source: cert-manager/templates/psp-clusterrole.yaml
-
-
----
-# Source: cert-manager/templates/psp-clusterrolebinding.yaml
-
-
----
-# Source: cert-manager/templates/psp.yaml
-
-
----
-# Source: cert-manager/templates/servicemonitor.yaml
-
-
----
-# Source: cert-manager/templates/webhook-psp-clusterrole.yaml
-
-
----
-# Source: cert-manager/templates/webhook-psp-clusterrolebinding.yaml
-
-
----
-# Source: cert-manager/templates/webhook-psp.yaml
-
-
----
 # Source: cert-manager/templates/webhook-validating-webhook.yaml
+---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
 metadata:
