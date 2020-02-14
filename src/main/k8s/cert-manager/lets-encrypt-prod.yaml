@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: lets-encrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: alexei.yashkov@yashkov.org
+    privateKeySecretRef:
+      name: lets-encrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
