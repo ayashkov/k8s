@@ -15,9 +15,11 @@ spec:
       labels:
         app: www
     spec:
+      imagePullSecrets:
+      - name: registry-cred
       containers:
       - name: www
-        image: gcr.io/yashkov/web-site:latest
+        image: registry.dev.yashkov.org/yashkov/web-site:30
         ports:
         - containerPort: 80
   replicas: 1
@@ -31,7 +33,7 @@ metadata:
   labels:
     app: www
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: www
   ports:
@@ -40,26 +42,35 @@ spec:
     port: 80
     targetPort: 80
 
-# ---
-# kind: ManagedCertificate
-# apiVersion: networking.gke.io/v1beta1
-# metadata:
-#   namespace: default
-#   name: www-certificate
-# spec:
-#   domains:
-#   - www.yashkov.org
-
 ---
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
-apiVersion: extensions/v1beta1
 metadata:
   namespace: default
   name: www
-  # annotations:
-  #   kubernetes.io/ingress.global-static-ip-name: main
-  #   networking.gke.io/managed-certificates: www-certificate
+  labels:
+    app: www
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "lets-encrypt-prod"
 spec:
-  backend:
-    serviceName: www
-    servicePort: 80
+  tls:
+  - hosts:
+    - yashkov.org
+    - www.yashkov.org
+    secretName: yashkov-org-ingress
+  rules:
+  - host: yashkov.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: www
+          servicePort: 80
+  - host: www.yashkov.org
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: www
+          servicePort: 80
