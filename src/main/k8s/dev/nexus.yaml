@@ -49,10 +49,10 @@ spec:
           name: nexus
         env:
         - name: INSTALL4J_ADD_VM_PARAMS
-          value: "-Xms128m -Xmx1024m -XX:MaxDirectMemorySize=2g -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs"
+          value: "-Xms512m -Xmx1200m -XX:MaxDirectMemorySize=2g -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs"
         ports:
         - containerPort: 8081
-  replicas: 0
+  replicas: 1
 
 ---
 kind: Service
@@ -82,7 +82,7 @@ metadata:
     app: nexus
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "lets-encrypt-staging"
+    cert-manager.io/cluster-issuer: "lets-encrypt-prod"
 spec:
   tls:
   - hosts:
