@@ -59,7 +59,7 @@ spec:
         volumeMounts:
         - mountPath: "/var/jenkins_home"
           name: jenkins-home
-        command: ['chown', '1000:1000', '/var/jenkins_home']
+        command: ["chown", "1000:1000", "/var/jenkins_home"]
       containers:
       - name: jenkins-master
         image: jenkins/jenkins:2.220-alpine
