@@ -22,7 +22,7 @@ spec:
         image: registry.dev.yashkov.org/yashkov/web-site:30
         ports:
         - containerPort: 80
-  replicas: 1
+  replicas: 2
 
 ---
 kind: Service
