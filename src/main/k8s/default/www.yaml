@@ -19,7 +19,7 @@ spec:
       - name: registry-cred
       containers:
       - name: www
-        image: registry.dev.yashkov.org/yashkov/web-site:30
+        image: registry.dev.yashkov.org/yashkov/web-site:31
         ports:
         - containerPort: 80
   replicas: 2
