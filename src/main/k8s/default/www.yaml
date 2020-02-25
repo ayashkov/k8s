@@ -22,6 +22,13 @@ spec:
         image: registry.dev.yashkov.org/yashkov/web-site:34
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
   replicas: 2
 
 ---

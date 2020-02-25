@@ -53,6 +53,13 @@ spec:
         ports:
         - containerPort: 8081
         - containerPort: 5000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 580Mi
+          limits:
+            cpu: 500m
+            memory: 1300Mi
   replicas: 1
 
 ---

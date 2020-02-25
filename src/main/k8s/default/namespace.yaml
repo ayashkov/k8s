@@ -1,14 +1,8 @@
 ---
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: dev
-
----
 kind: LimitRange
 apiVersion: v1
 metadata:
-  namespace: dev
+  namespace: default
   name: limits
 spec:
   limits:
