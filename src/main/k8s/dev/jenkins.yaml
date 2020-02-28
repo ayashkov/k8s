@@ -18,6 +18,21 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   namespace: dev
+  name: build-cache-0
+spec:
+  storageClassName: do-block-storage
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 512Mi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: dev
   name: maven-repo
 spec:
   storageClassName: do-block-storage
