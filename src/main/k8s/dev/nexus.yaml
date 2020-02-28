@@ -14,6 +14,21 @@ spec:
       storage: 5Gi
 
 ---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: dev
+  name: nexus-releases
+spec:
+  storageClassName: do-block-storage
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -31,22 +46,29 @@ spec:
         app: nexus
     spec:
       volumes:
-      - name: nexus
+      - name: data
         persistentVolumeClaim:
           claimName: nexus
+      - name: releases
+        persistentVolumeClaim:
+          claimName: nexus-releases
       initContainers:
-      - name: nexus-data-init
+      - name: nexus-volumes
         image: alpine:3.9.5
         volumeMounts:
         - mountPath: "/nexus-data"
-          name: nexus
-        command: ["chown", "200:200", "/nexus-data"]
+          name: data
+        - mountPath: "/nexus-releases"
+          name: releases
+        command: ["chown", "200:200", "/nexus-data", "/nexus-releases"]
       containers:
       - name: nexus
         image: sonatype/nexus3:3.21.1
         volumeMounts:
         - mountPath: "/nexus-data"
-          name: nexus
+          name: data
+        - mountPath: "/nexus-releases"
+          name: releases
         env:
         - name: INSTALL4J_ADD_VM_PARAMS
           value: "-Xms512m -Xmx1200m -XX:MaxDirectMemorySize=2g -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs"
