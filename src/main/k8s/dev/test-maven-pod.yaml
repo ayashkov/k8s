@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: dev
+  name: test-build
+spec:
+  volumes:
+  - name: maven-settings
+    secret:
+      secretName: maven-settings
+  - name: build-cache
+    hostPath:
+      path: "/var/tmp/build-cache"
+  containers:
+  - name: maven
+    image: maven:3-jdk-13-alpine
+    volumeMounts:
+    - mountPath: "/root/.m2"
+      name: maven-settings
+    - mountPath: "/cache"
+      name: build-cache
+    command:
+    - cat
+    tty: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
