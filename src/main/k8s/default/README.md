@@ -1,3 +1,12 @@
+# Prerequisites
+
+Deployments in this namespace require _ingress-nginx_ and the
+_cert-manager_ to be operational in the cluster. Please
+see information about rolling them out in:
+
+* [src/main/k8s/ingress-nginx/README.md](../ingress-nginx/README.md)
+* [src/main/k8s/cert-manager/README.md](../cert-manager/README.md)
+
 # Namespace Configuration
 
 The default namespace needs to be prepared for the deployment. Please
