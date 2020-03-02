@@ -42,5 +42,37 @@ xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
       <mirrorOf>*</mirrorOf>
     </mirror>
   </mirrors>
+  <activeProfiles>
+    <activeProfile>yashkov</activeProfile>
+  </activeProfiles>
+  <profiles>
+    <profile>
+      <id>yashkov</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
 </settings>
 EOF
