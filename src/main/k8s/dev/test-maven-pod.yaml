@@ -14,6 +14,19 @@ spec:
   containers:
   - name: maven
     image: maven:3-jdk-13-alpine
+    env:
+    - name: MEMORY_REQUEST
+      valueFrom:
+        resourceFieldRef:
+          containerName: maven
+          resource: requests.memory
+    - name: MEMORY_LIMIT
+      valueFrom:
+        resourceFieldRef:
+          containerName: maven
+          resource: limits.memory
+    - name: JAVA_TOOL_OPTIONS
+      value: "-XX:MaxRAMPercentage=75"
     volumeMounts:
     - mountPath: "/root/.m2"
       name: maven-settings
@@ -25,7 +38,7 @@ spec:
     resources:
       requests:
         cpu: 10m
-        memory: 64Mi
+        memory: 300Mi
       limits:
         cpu: 100m
-        memory: 128Mi
+        memory: 350Mi
