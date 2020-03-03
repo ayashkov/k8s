@@ -47,7 +47,10 @@ spec:
         command: ["chown", "1000:1000", "/var/jenkins_home"]
       containers:
       - name: jenkins-master
-        image: jenkins/jenkins:2.222-alpine
+        image: jenkins/jenkins:2.223-jdk11
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: "-XX:MaxRAMPercentage=80"
         volumeMounts:
         - mountPath: "/var/jenkins_home"
           name: jenkins-home
@@ -60,11 +63,11 @@ spec:
             port: 8080
         resources:
           requests:
-            cpu: 250m
-            memory: 128Mi
+            cpu: 100m
+            memory: 400Mi
           limits:
             cpu: 500m
-            memory: 512Mi
+            memory: 450Mi
   replicas: 1
 
 ---
