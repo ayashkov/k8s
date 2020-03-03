@@ -5556,6 +5556,22 @@ kind: Namespace
 metadata:
   name: cert-manager
 
+---
+kind: LimitRange
+apiVersion: v1
+metadata:
+  namespace: cert-manager
+  name: limits
+spec:
+  limits:
+  - type: Container
+    default:
+      cpu: 200m
+      memory: 60Mi
+    defaultRequest:
+      cpu: 10m
+      memory: 50Mi
+
 # Source: cert-manager/templates/cainjector-serviceaccount.yaml
 ---
 apiVersion: v1
