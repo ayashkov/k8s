@@ -189,6 +189,7 @@ spec:
   - name: v1alpha2
     served: true
     storage: true
+
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -470,6 +471,7 @@ spec:
   - name: v1alpha2
     served: true
     storage: true
+
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -1862,6 +1864,7 @@ spec:
   - name: v1alpha2
     served: true
     storage: true
+
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -3602,6 +3605,7 @@ spec:
   - name: v1alpha2
     served: true
     storage: true
+
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -5342,6 +5346,7 @@ spec:
   - name: v1alpha2
     served: true
     storage: true
+
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -5550,8 +5555,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: cert-manager
----
+
 # Source: cert-manager/templates/cainjector-serviceaccount.yaml
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -5564,8 +5570,8 @@ metadata:
     app.kubernetes.io/managed-by: Tiller
     helm.sh/chart: cert-manager-v0.13.0
 
----
 # Source: cert-manager/templates/serviceaccount.yaml
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -5578,8 +5584,8 @@ metadata:
     app.kubernetes.io/managed-by: Tiller
     helm.sh/chart: cert-manager-v0.13.0
 
----
 # Source: cert-manager/templates/webhook-serviceaccount.yaml
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -5591,8 +5597,9 @@ metadata:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Tiller
     helm.sh/chart: cert-manager-v0.13.0
----
+
 # Source: cert-manager/templates/cainjector-rbac.yaml
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -5622,6 +5629,7 @@ rules:
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "list", "watch", "update"]
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
@@ -5642,8 +5650,8 @@ subjects:
     namespace: "cert-manager"
     kind: ServiceAccount
 
----
 # leader election rules
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
@@ -5662,10 +5670,9 @@ rules:
     resources: ["configmaps"]
     verbs: ["get", "create", "update", "patch"]
 
----
-
 # grant cert-manager permission to manage the leaderelection configmap in the
 # leader election namespace
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
@@ -5711,11 +5718,10 @@ subjects:
   name: cert-manager-webhook
   namespace: cert-manager
 
----
-
 # apiserver gets the ability to read authentication. This allows it to
 # read the specific configmap that has the requestheader-* entries to
 # api agg
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
@@ -5738,7 +5744,6 @@ subjects:
   namespace: cert-manager
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -5759,8 +5764,9 @@ rules:
   - clusterissuers
   verbs:
   - create
----
+
 # Source: cert-manager/templates/rbac.yaml
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
@@ -5779,10 +5785,9 @@ rules:
     resources: ["configmaps"]
     verbs: ["get", "create", "update", "patch"]
 
----
-
 # grant cert-manager permission to manage the leaderelection configmap in the
 # leader election namespace
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
@@ -5804,9 +5809,8 @@ subjects:
     name: cert-manager
     namespace: cert-manager
 
----
-
 # Issuer controller role
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -5831,9 +5835,8 @@ rules:
     resources: ["events"]
     verbs: ["create", "patch"]
 
----
-
 # ClusterIssuer controller role
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -5858,9 +5861,8 @@ rules:
     resources: ["events"]
     verbs: ["create", "patch"]
 
----
-
 # Certificates controller role
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -5894,9 +5896,8 @@ rules:
     resources: ["events"]
     verbs: ["create", "patch"]
 
----
-
 # Orders controller role
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -5933,9 +5934,8 @@ rules:
     resources: ["events"]
     verbs: ["create", "patch"]
 
----
-
 # Challenges controller role
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -5985,9 +5985,8 @@ rules:
     resources: ["secrets"]
     verbs: ["get", "list", "watch"]
 
----
-
 # ingress-shim controller role
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
@@ -6019,7 +6018,6 @@ rules:
     verbs: ["create", "patch"]
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -6040,7 +6038,6 @@ subjects:
     kind: ServiceAccount
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -6061,7 +6058,6 @@ subjects:
     kind: ServiceAccount
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -6082,7 +6078,6 @@ subjects:
     kind: ServiceAccount
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -6103,7 +6098,6 @@ subjects:
     kind: ServiceAccount
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -6124,7 +6118,6 @@ subjects:
     kind: ServiceAccount
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -6145,7 +6138,6 @@ subjects:
     kind: ServiceAccount
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -6165,7 +6157,6 @@ rules:
     verbs: ["get", "list", "watch"]
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -6183,9 +6174,8 @@ rules:
     resources: ["certificates", "certificaterequests", "issuers"]
     verbs: ["create", "delete", "deletecollection", "patch", "update"]
 
----
 # Source: cert-manager/templates/service.yaml
-
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -6207,8 +6197,8 @@ spec:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
 
----
 # Source: cert-manager/templates/webhook-service.yaml
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -6231,8 +6221,9 @@ spec:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Tiller
----
+
 # Source: cert-manager/templates/cainjector-deployment.yaml
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6277,8 +6268,8 @@ spec:
           resources:
             {}
 
----
 # Source: cert-manager/templates/deployment.yaml
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6337,9 +6328,8 @@ spec:
               cpu: 10m
               memory: 32Mi
 
-
----
 # Source: cert-manager/templates/webhook-deployment.yaml
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6403,8 +6393,9 @@ spec:
       - name: certs
         secret:
           secretName: cert-manager-webhook-tls
----
+
 # Source: cert-manager/templates/webhook-mutating-webhook.yaml
+---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingWebhookConfiguration
 metadata:

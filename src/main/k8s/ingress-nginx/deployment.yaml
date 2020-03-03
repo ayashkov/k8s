@@ -285,8 +285,10 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 spec:
   limits:
-  - default:
-    min:
-      memory: 90Mi
+  - type: Container
+    default:
+      cpu: 200m
+      memory: 100Mi
+    defaultRequest:
       cpu: 100m
-    type: Container
+      memory: 90Mi
