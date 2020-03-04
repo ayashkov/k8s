@@ -117,6 +117,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "lets-encrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
 spec:
   tls:
   - hosts:
@@ -142,7 +143,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "lets-encrypt-prod"
-    nginx.ingress.kubernetes.io/proxy-body-size: 500m
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
 spec:
   tls:
   - hosts:
