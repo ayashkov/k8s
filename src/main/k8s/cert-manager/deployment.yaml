@@ -6437,6 +6437,7 @@ webhooks:
           - UPDATE
         resources:
           - "*/*"
+    timeoutSeconds: 10
     failurePolicy: Fail
     sideEffects: None
     clientConfig:
@@ -6482,6 +6483,7 @@ webhooks:
           - UPDATE
         resources:
           - "*/*"
+    timeoutSeconds: 10
     failurePolicy: Fail
     sideEffects: None
     clientConfig:
