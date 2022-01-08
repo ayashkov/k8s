@@ -12,6 +12,6 @@ Below are the images used for my own tracking.
 * `quay.io/jetstack/cert-manager-cainjector:v0.13.0`
 * `quay.io/jetstack/cert-manager-controller:v0.13.0`
 * `quay.io/jetstack/cert-manager-webhook:v0.13.0`
-* `jenkins/jenkins:2.223-jdk11`
-* `sonatype/nexus3:3.21.1`
+* `jenkins/jenkins:2.319.1-jdk11`
+* `sonatype/nexus3:3.37.2`
 * `nginx:1.16.1-alpine`

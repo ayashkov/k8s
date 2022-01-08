@@ -63,7 +63,7 @@ spec:
         command: ["chown", "200:200", "/nexus-data", "/nexus-releases"]
       containers:
       - name: nexus
-        image: sonatype/nexus3:3.21.1
+        image: sonatype/nexus3:3.37.2
         volumeMounts:
         - mountPath: "/nexus-data"
           name: data

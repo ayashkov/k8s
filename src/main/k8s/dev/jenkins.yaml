@@ -47,7 +47,7 @@ spec:
         command: ["chown", "1000:1000", "/var/jenkins_home"]
       containers:
       - name: jenkins-master
-        image: jenkins/jenkins:2.223-jdk11
+        image: jenkins/jenkins:2.319.1-jdk11
         volumeMounts:
         - mountPath: "/var/jenkins_home"
           name: jenkins-home
