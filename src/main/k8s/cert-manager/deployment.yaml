@@ -1,17 +1,3 @@
-# Copyright 2021 The cert-manager Authors.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 ---
 # Source: cert-manager/templates/templates.out
 apiVersion: apiextensions.k8s.io/v1
@@ -25,7 +11,7 @@ metadata:
     app.kubernetes.io/name: 'cert-manager'
     app.kubernetes.io/instance: 'cert-manager'
     # Generated labels
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   group: cert-manager.io
   names:
@@ -227,7 +213,7 @@ spec:
                   description: FailureTime stores the time that this CertificateRequest failed. This is used to influence garbage collection and back-off.
                   type: string
                   format: date-time
-      served: true
+      served: false
       storage: false
     - name: v1alpha3
       subresources:
@@ -396,7 +382,7 @@ spec:
                   description: FailureTime stores the time that this CertificateRequest failed. This is used to influence garbage collection and back-off.
                   type: string
                   format: date-time
-      served: true
+      served: false
       storage: false
     - name: v1beta1
       subresources:
@@ -567,7 +553,7 @@ spec:
                   description: FailureTime stores the time that this CertificateRequest failed. This is used to influence garbage collection and back-off.
                   type: string
                   format: date-time
-      served: true
+      served: false
       storage: false
     - name: v1
       subresources:
@@ -753,7 +739,7 @@ metadata:
     app.kubernetes.io/name: 'cert-manager'
     app.kubernetes.io/instance: 'cert-manager'
     # Generated labels
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   group: cert-manager.io
   names:
@@ -1103,7 +1089,7 @@ spec:
                 revision:
                   description: "The current 'revision' of the certificate as issued. \n When a CertificateRequest resource is created, it will have the `cert-manager.io/certificate-revision` set to one greater than the current value of this field. \n Upon issuance, this field will be set to the value of the annotation on the CertificateRequest resource used to issue the certificate. \n Persisting the value on the CertificateRequest resource allows the certificates controller to know whether a request is part of an old issuance or if it is part of the ongoing revision's issuance by checking if the revision value in the annotation is greater than this field."
                   type: integer
-      served: true
+      served: false
       storage: false
     - name: v1alpha3
       subresources:
@@ -1420,7 +1406,7 @@ spec:
                 revision:
                   description: "The current 'revision' of the certificate as issued. \n When a CertificateRequest resource is created, it will have the `cert-manager.io/certificate-revision` set to one greater than the current value of this field. \n Upon issuance, this field will be set to the value of the annotation on the CertificateRequest resource used to issue the certificate. \n Persisting the value on the CertificateRequest resource allows the certificates controller to know whether a request is part of an old issuance or if it is part of the ongoing revision's issuance by checking if the revision value in the annotation is greater than this field."
                   type: integer
-      served: true
+      served: false
       storage: false
     - name: v1beta1
       subresources:
@@ -1739,7 +1725,7 @@ spec:
                 revision:
                   description: "The current 'revision' of the certificate as issued. \n When a CertificateRequest resource is created, it will have the `cert-manager.io/certificate-revision` set to one greater than the current value of this field. \n Upon issuance, this field will be set to the value of the annotation on the CertificateRequest resource used to issue the certificate. \n Persisting the value on the CertificateRequest resource allows the certificates controller to know whether a request is part of an old issuance or if it is part of the ongoing revision's issuance by checking if the revision value in the annotation is greater than this field."
                   type: integer
-      served: true
+      served: false
       storage: false
     - name: v1
       subresources:
@@ -2074,7 +2060,7 @@ metadata:
     app.kubernetes.io/name: 'cert-manager'
     app.kubernetes.io/instance: 'cert-manager'
     # Generated labels
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   group: acme.cert-manager.io
   names:
@@ -2273,6 +2259,7 @@ spec:
                                   description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                   type: string
                             environment:
+                              description: name of the Azure environment (default AzurePublicCloud)
                               type: string
                               enum:
                                 - AzurePublicCloud
@@ -2280,10 +2267,23 @@ spec:
                                 - AzureGermanCloud
                                 - AzureUSGovernmentCloud
                             hostedZoneName:
+                              description: name of the DNS zone that should be used
                               type: string
+                            managedIdentity:
+                              description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                              type: object
+                              properties:
+                                clientID:
+                                  description: client ID of the managed identity, can not be used at the same time as resourceID
+                                  type: string
+                                resourceID:
+                                  description: resource ID of the managed identity, can not be used at the same time as clientID
+                                  type: string
                             resourceGroupName:
+                              description: resource group the DNS zone is located in
                               type: string
                             subscriptionID:
+                              description: ID of the Azure subscription
                               type: string
                             tenantID:
                               description: when specifying ClientID and ClientSecret then this field is also needed
@@ -2679,7 +2679,7 @@ spec:
                                                             additionalProperties:
                                                               type: string
                                                       namespaceSelector:
-                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                         type: object
                                                         properties:
                                                           matchExpressions:
@@ -2760,7 +2760,7 @@ spec:
                                                         additionalProperties:
                                                           type: string
                                                   namespaceSelector:
-                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                     type: object
                                                     properties:
                                                       matchExpressions:
@@ -2848,7 +2848,7 @@ spec:
                                                             additionalProperties:
                                                               type: string
                                                       namespaceSelector:
-                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                         type: object
                                                         properties:
                                                           matchExpressions:
@@ -2929,7 +2929,7 @@ spec:
                                                         additionalProperties:
                                                           type: string
                                                   namespaceSelector:
-                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                     type: object
                                                     properties:
                                                       matchExpressions:
@@ -3060,7 +3060,7 @@ spec:
                     - invalid
                     - expired
                     - errored
-      served: true
+      served: false
       storage: false
       subresources:
         status: {}
@@ -3230,6 +3230,7 @@ spec:
                                   description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                   type: string
                             environment:
+                              description: name of the Azure environment (default AzurePublicCloud)
                               type: string
                               enum:
                                 - AzurePublicCloud
@@ -3237,10 +3238,23 @@ spec:
                                 - AzureGermanCloud
                                 - AzureUSGovernmentCloud
                             hostedZoneName:
+                              description: name of the DNS zone that should be used
                               type: string
+                            managedIdentity:
+                              description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                              type: object
+                              properties:
+                                clientID:
+                                  description: client ID of the managed identity, can not be used at the same time as resourceID
+                                  type: string
+                                resourceID:
+                                  description: resource ID of the managed identity, can not be used at the same time as clientID
+                                  type: string
                             resourceGroupName:
+                              description: resource group the DNS zone is located in
                               type: string
                             subscriptionID:
+                              description: ID of the Azure subscription
                               type: string
                             tenantID:
                               description: when specifying ClientID and ClientSecret then this field is also needed
@@ -3636,7 +3650,7 @@ spec:
                                                             additionalProperties:
                                                               type: string
                                                       namespaceSelector:
-                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                         type: object
                                                         properties:
                                                           matchExpressions:
@@ -3717,7 +3731,7 @@ spec:
                                                         additionalProperties:
                                                           type: string
                                                   namespaceSelector:
-                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                     type: object
                                                     properties:
                                                       matchExpressions:
@@ -3805,7 +3819,7 @@ spec:
                                                             additionalProperties:
                                                               type: string
                                                       namespaceSelector:
-                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                         type: object
                                                         properties:
                                                           matchExpressions:
@@ -3886,7 +3900,7 @@ spec:
                                                         additionalProperties:
                                                           type: string
                                                   namespaceSelector:
-                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                     type: object
                                                     properties:
                                                       matchExpressions:
@@ -4017,7 +4031,7 @@ spec:
                     - invalid
                     - expired
                     - errored
-      served: true
+      served: false
       storage: false
       subresources:
         status: {}
@@ -4188,6 +4202,7 @@ spec:
                                   description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                   type: string
                             environment:
+                              description: name of the Azure environment (default AzurePublicCloud)
                               type: string
                               enum:
                                 - AzurePublicCloud
@@ -4195,10 +4210,23 @@ spec:
                                 - AzureGermanCloud
                                 - AzureUSGovernmentCloud
                             hostedZoneName:
+                              description: name of the DNS zone that should be used
                               type: string
+                            managedIdentity:
+                              description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                              type: object
+                              properties:
+                                clientID:
+                                  description: client ID of the managed identity, can not be used at the same time as resourceID
+                                  type: string
+                                resourceID:
+                                  description: resource ID of the managed identity, can not be used at the same time as clientID
+                                  type: string
                             resourceGroupName:
+                              description: resource group the DNS zone is located in
                               type: string
                             subscriptionID:
+                              description: ID of the Azure subscription
                               type: string
                             tenantID:
                               description: when specifying ClientID and ClientSecret then this field is also needed
@@ -4594,7 +4622,7 @@ spec:
                                                             additionalProperties:
                                                               type: string
                                                       namespaceSelector:
-                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                         type: object
                                                         properties:
                                                           matchExpressions:
@@ -4675,7 +4703,7 @@ spec:
                                                         additionalProperties:
                                                           type: string
                                                   namespaceSelector:
-                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                     type: object
                                                     properties:
                                                       matchExpressions:
@@ -4763,7 +4791,7 @@ spec:
                                                             additionalProperties:
                                                               type: string
                                                       namespaceSelector:
-                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                         type: object
                                                         properties:
                                                           matchExpressions:
@@ -4844,7 +4872,7 @@ spec:
                                                         additionalProperties:
                                                           type: string
                                                   namespaceSelector:
-                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                     type: object
                                                     properties:
                                                       matchExpressions:
@@ -4975,7 +5003,7 @@ spec:
                     - invalid
                     - expired
                     - errored
-      served: true
+      served: false
       storage: false
       subresources:
         status: {}
@@ -5146,6 +5174,7 @@ spec:
                                   description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                   type: string
                             environment:
+                              description: name of the Azure environment (default AzurePublicCloud)
                               type: string
                               enum:
                                 - AzurePublicCloud
@@ -5153,10 +5182,23 @@ spec:
                                 - AzureGermanCloud
                                 - AzureUSGovernmentCloud
                             hostedZoneName:
+                              description: name of the DNS zone that should be used
                               type: string
+                            managedIdentity:
+                              description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                              type: object
+                              properties:
+                                clientID:
+                                  description: client ID of the managed identity, can not be used at the same time as resourceID
+                                  type: string
+                                resourceID:
+                                  description: resource ID of the managed identity, can not be used at the same time as clientID
+                                  type: string
                             resourceGroupName:
+                              description: resource group the DNS zone is located in
                               type: string
                             subscriptionID:
+                              description: ID of the Azure subscription
                               type: string
                             tenantID:
                               description: when specifying ClientID and ClientSecret then this field is also needed
@@ -5552,7 +5594,7 @@ spec:
                                                             additionalProperties:
                                                               type: string
                                                       namespaceSelector:
-                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                         type: object
                                                         properties:
                                                           matchExpressions:
@@ -5633,7 +5675,7 @@ spec:
                                                         additionalProperties:
                                                           type: string
                                                   namespaceSelector:
-                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                     type: object
                                                     properties:
                                                       matchExpressions:
@@ -5721,7 +5763,7 @@ spec:
                                                             additionalProperties:
                                                               type: string
                                                       namespaceSelector:
-                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                        description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                         type: object
                                                         properties:
                                                           matchExpressions:
@@ -5802,7 +5844,7 @@ spec:
                                                         additionalProperties:
                                                           type: string
                                                   namespaceSelector:
-                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                    description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                     type: object
                                                     properties:
                                                       matchExpressions:
@@ -5950,7 +5992,7 @@ metadata:
     app.kubernetes.io/name: 'cert-manager'
     app.kubernetes.io/instance: 'cert-manager'
     # Generated labels
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   group: cert-manager.io
   names:
@@ -6183,6 +6225,7 @@ spec:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
                                   environment:
+                                    description: name of the Azure environment (default AzurePublicCloud)
                                     type: string
                                     enum:
                                       - AzurePublicCloud
@@ -6190,10 +6233,23 @@ spec:
                                       - AzureGermanCloud
                                       - AzureUSGovernmentCloud
                                   hostedZoneName:
+                                    description: name of the DNS zone that should be used
                                     type: string
+                                  managedIdentity:
+                                    description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                                    type: object
+                                    properties:
+                                      clientID:
+                                        description: client ID of the managed identity, can not be used at the same time as resourceID
+                                        type: string
+                                      resourceID:
+                                        description: resource ID of the managed identity, can not be used at the same time as clientID
+                                        type: string
                                   resourceGroupName:
+                                    description: resource group the DNS zone is located in
                                     type: string
                                   subscriptionID:
+                                    description: ID of the Azure subscription
                                     type: string
                                   tenantID:
                                     description: when specifying ClientID and ClientSecret then this field is also needed
@@ -6589,7 +6645,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -6670,7 +6726,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -6758,7 +6814,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -6839,7 +6895,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -7149,7 +7205,7 @@ spec:
                       type:
                         description: Type of the condition, known values are (`Ready`).
                         type: string
-      served: true
+      served: false
       storage: false
     - name: v1alpha3
       subresources:
@@ -7352,6 +7408,7 @@ spec:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
                                   environment:
+                                    description: name of the Azure environment (default AzurePublicCloud)
                                     type: string
                                     enum:
                                       - AzurePublicCloud
@@ -7359,10 +7416,23 @@ spec:
                                       - AzureGermanCloud
                                       - AzureUSGovernmentCloud
                                   hostedZoneName:
+                                    description: name of the DNS zone that should be used
                                     type: string
+                                  managedIdentity:
+                                    description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                                    type: object
+                                    properties:
+                                      clientID:
+                                        description: client ID of the managed identity, can not be used at the same time as resourceID
+                                        type: string
+                                      resourceID:
+                                        description: resource ID of the managed identity, can not be used at the same time as clientID
+                                        type: string
                                   resourceGroupName:
+                                    description: resource group the DNS zone is located in
                                     type: string
                                   subscriptionID:
+                                    description: ID of the Azure subscription
                                     type: string
                                   tenantID:
                                     description: when specifying ClientID and ClientSecret then this field is also needed
@@ -7758,7 +7828,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -7839,7 +7909,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -7927,7 +7997,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -8008,7 +8078,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -8318,7 +8388,7 @@ spec:
                       type:
                         description: Type of the condition, known values are (`Ready`).
                         type: string
-      served: true
+      served: false
       storage: false
     - name: v1beta1
       subresources:
@@ -8523,6 +8593,7 @@ spec:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
                                   environment:
+                                    description: name of the Azure environment (default AzurePublicCloud)
                                     type: string
                                     enum:
                                       - AzurePublicCloud
@@ -8530,10 +8601,23 @@ spec:
                                       - AzureGermanCloud
                                       - AzureUSGovernmentCloud
                                   hostedZoneName:
+                                    description: name of the DNS zone that should be used
                                     type: string
+                                  managedIdentity:
+                                    description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                                    type: object
+                                    properties:
+                                      clientID:
+                                        description: client ID of the managed identity, can not be used at the same time as resourceID
+                                        type: string
+                                      resourceID:
+                                        description: resource ID of the managed identity, can not be used at the same time as clientID
+                                        type: string
                                   resourceGroupName:
+                                    description: resource group the DNS zone is located in
                                     type: string
                                   subscriptionID:
+                                    description: ID of the Azure subscription
                                     type: string
                                   tenantID:
                                     description: when specifying ClientID and ClientSecret then this field is also needed
@@ -8929,7 +9013,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -9010,7 +9094,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -9098,7 +9182,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -9179,7 +9263,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -9489,7 +9573,7 @@ spec:
                       type:
                         description: Type of the condition, known values are (`Ready`).
                         type: string
-      served: true
+      served: false
       storage: false
     - name: v1
       subresources:
@@ -9694,6 +9778,7 @@ spec:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
                                   environment:
+                                    description: name of the Azure environment (default AzurePublicCloud)
                                     type: string
                                     enum:
                                       - AzurePublicCloud
@@ -9701,10 +9786,23 @@ spec:
                                       - AzureGermanCloud
                                       - AzureUSGovernmentCloud
                                   hostedZoneName:
+                                    description: name of the DNS zone that should be used
                                     type: string
+                                  managedIdentity:
+                                    description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                                    type: object
+                                    properties:
+                                      clientID:
+                                        description: client ID of the managed identity, can not be used at the same time as resourceID
+                                        type: string
+                                      resourceID:
+                                        description: resource ID of the managed identity, can not be used at the same time as clientID
+                                        type: string
                                   resourceGroupName:
+                                    description: resource group the DNS zone is located in
                                     type: string
                                   subscriptionID:
+                                    description: ID of the Azure subscription
                                     type: string
                                   tenantID:
                                     description: when specifying ClientID and ClientSecret then this field is also needed
@@ -10100,7 +10198,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -10181,7 +10279,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -10269,7 +10367,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -10350,7 +10448,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -10675,7 +10773,7 @@ metadata:
     app.kubernetes.io/name: 'cert-manager'
     app.kubernetes.io/instance: 'cert-manager'
     # Generated labels
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   group: cert-manager.io
   names:
@@ -10908,6 +11006,7 @@ spec:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
                                   environment:
+                                    description: name of the Azure environment (default AzurePublicCloud)
                                     type: string
                                     enum:
                                       - AzurePublicCloud
@@ -10915,10 +11014,23 @@ spec:
                                       - AzureGermanCloud
                                       - AzureUSGovernmentCloud
                                   hostedZoneName:
+                                    description: name of the DNS zone that should be used
                                     type: string
+                                  managedIdentity:
+                                    description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                                    type: object
+                                    properties:
+                                      clientID:
+                                        description: client ID of the managed identity, can not be used at the same time as resourceID
+                                        type: string
+                                      resourceID:
+                                        description: resource ID of the managed identity, can not be used at the same time as clientID
+                                        type: string
                                   resourceGroupName:
+                                    description: resource group the DNS zone is located in
                                     type: string
                                   subscriptionID:
+                                    description: ID of the Azure subscription
                                     type: string
                                   tenantID:
                                     description: when specifying ClientID and ClientSecret then this field is also needed
@@ -11314,7 +11426,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -11395,7 +11507,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -11483,7 +11595,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -11564,7 +11676,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -11874,7 +11986,7 @@ spec:
                       type:
                         description: Type of the condition, known values are (`Ready`).
                         type: string
-      served: true
+      served: false
       storage: false
     - name: v1alpha3
       subresources:
@@ -12077,6 +12189,7 @@ spec:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
                                   environment:
+                                    description: name of the Azure environment (default AzurePublicCloud)
                                     type: string
                                     enum:
                                       - AzurePublicCloud
@@ -12084,10 +12197,23 @@ spec:
                                       - AzureGermanCloud
                                       - AzureUSGovernmentCloud
                                   hostedZoneName:
+                                    description: name of the DNS zone that should be used
                                     type: string
+                                  managedIdentity:
+                                    description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                                    type: object
+                                    properties:
+                                      clientID:
+                                        description: client ID of the managed identity, can not be used at the same time as resourceID
+                                        type: string
+                                      resourceID:
+                                        description: resource ID of the managed identity, can not be used at the same time as clientID
+                                        type: string
                                   resourceGroupName:
+                                    description: resource group the DNS zone is located in
                                     type: string
                                   subscriptionID:
+                                    description: ID of the Azure subscription
                                     type: string
                                   tenantID:
                                     description: when specifying ClientID and ClientSecret then this field is also needed
@@ -12483,7 +12609,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -12564,7 +12690,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -12652,7 +12778,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -12733,7 +12859,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -13043,7 +13169,7 @@ spec:
                       type:
                         description: Type of the condition, known values are (`Ready`).
                         type: string
-      served: true
+      served: false
       storage: false
     - name: v1beta1
       subresources:
@@ -13248,6 +13374,7 @@ spec:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
                                   environment:
+                                    description: name of the Azure environment (default AzurePublicCloud)
                                     type: string
                                     enum:
                                       - AzurePublicCloud
@@ -13255,10 +13382,23 @@ spec:
                                       - AzureGermanCloud
                                       - AzureUSGovernmentCloud
                                   hostedZoneName:
+                                    description: name of the DNS zone that should be used
                                     type: string
+                                  managedIdentity:
+                                    description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                                    type: object
+                                    properties:
+                                      clientID:
+                                        description: client ID of the managed identity, can not be used at the same time as resourceID
+                                        type: string
+                                      resourceID:
+                                        description: resource ID of the managed identity, can not be used at the same time as clientID
+                                        type: string
                                   resourceGroupName:
+                                    description: resource group the DNS zone is located in
                                     type: string
                                   subscriptionID:
+                                    description: ID of the Azure subscription
                                     type: string
                                   tenantID:
                                     description: when specifying ClientID and ClientSecret then this field is also needed
@@ -13654,7 +13794,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -13735,7 +13875,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -13823,7 +13963,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -13904,7 +14044,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -14214,7 +14354,7 @@ spec:
                       type:
                         description: Type of the condition, known values are (`Ready`).
                         type: string
-      served: true
+      served: false
       storage: false
     - name: v1
       subresources:
@@ -14419,6 +14559,7 @@ spec:
                                         description: 'Name of the resource being referred to. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
                                         type: string
                                   environment:
+                                    description: name of the Azure environment (default AzurePublicCloud)
                                     type: string
                                     enum:
                                       - AzurePublicCloud
@@ -14426,10 +14567,23 @@ spec:
                                       - AzureGermanCloud
                                       - AzureUSGovernmentCloud
                                   hostedZoneName:
+                                    description: name of the DNS zone that should be used
                                     type: string
+                                  managedIdentity:
+                                    description: managed identity configuration, can not be used at the same time as clientID, clientSecretSecretRef or tenantID
+                                    type: object
+                                    properties:
+                                      clientID:
+                                        description: client ID of the managed identity, can not be used at the same time as resourceID
+                                        type: string
+                                      resourceID:
+                                        description: resource ID of the managed identity, can not be used at the same time as clientID
+                                        type: string
                                   resourceGroupName:
+                                    description: resource group the DNS zone is located in
                                     type: string
                                   subscriptionID:
+                                    description: ID of the Azure subscription
                                     type: string
                                   tenantID:
                                     description: when specifying ClientID and ClientSecret then this field is also needed
@@ -14825,7 +14979,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -14906,7 +15060,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -14994,7 +15148,7 @@ spec:
                                                                   additionalProperties:
                                                                     type: string
                                                             namespaceSelector:
-                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                              description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                               type: object
                                                               properties:
                                                                 matchExpressions:
@@ -15075,7 +15229,7 @@ spec:
                                                               additionalProperties:
                                                                 type: string
                                                         namespaceSelector:
-                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is alpha-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
+                                                          description: A label query over the set of namespaces that the term applies to. The term is applied to the union of the namespaces selected by this field and the ones listed in the namespaces field. null selector and null or empty namespaces list means "this pod's namespace". An empty selector ({}) matches all namespaces. This field is beta-level and is only honored when PodAffinityNamespaceSelector feature is enabled.
                                                           type: object
                                                           properties:
                                                             matchExpressions:
@@ -15400,7 +15554,7 @@ metadata:
     app.kubernetes.io/name: 'cert-manager'
     app.kubernetes.io/instance: 'cert-manager'
     # Generated labels
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   group: acme.cert-manager.io
   names:
@@ -15588,7 +15742,7 @@ spec:
                 url:
                   description: URL of the Order. This will initially be empty when the resource is first created. The Order controller will populate this field when the Order is first processed. This field will be immutable after it is initially set.
                   type: string
-      served: true
+      served: false
       storage: false
     - name: v1alpha3
       subresources:
@@ -15745,7 +15899,7 @@ spec:
                 url:
                   description: URL of the Order. This will initially be empty when the resource is first created. The Order controller will populate this field when the Order is first processed. This field will be immutable after it is initially set.
                   type: string
-      served: true
+      served: false
       storage: false
     - name: v1beta1
       subresources:
@@ -15903,7 +16057,7 @@ spec:
                 url:
                   description: URL of the Order. This will initially be empty when the resource is first created. The Order controller will populate this field when the Order is first processed. This field will be immutable after it is initially set.
                   type: string
-      served: true
+      served: false
       storage: false
     - name: v1
       subresources:
@@ -16081,7 +16235,7 @@ metadata:
     app.kubernetes.io/name: cainjector
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cainjector"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 ---
 # Source: cert-manager/templates/serviceaccount.yaml
 apiVersion: v1
@@ -16095,7 +16249,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 ---
 # Source: cert-manager/templates/webhook-serviceaccount.yaml
 apiVersion: v1
@@ -16109,7 +16263,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 ---
 # Source: cert-manager/templates/cainjector-rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -16121,7 +16275,7 @@ metadata:
     app.kubernetes.io/name: cainjector
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cainjector"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["certificates"]
@@ -16156,7 +16310,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["issuers", "issuers/status"]
@@ -16182,7 +16336,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["clusterissuers", "clusterissuers/status"]
@@ -16208,7 +16362,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["certificates", "certificates/status", "certificaterequests", "certificaterequests/status"]
@@ -16243,7 +16397,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   - apiGroups: ["acme.cert-manager.io"]
     resources: ["orders", "orders/status"]
@@ -16281,7 +16435,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   # Use to update challenge resource status
   - apiGroups: ["acme.cert-manager.io"]
@@ -16341,7 +16495,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["certificates", "certificaterequests"]
@@ -16378,7 +16532,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
     rbac.authorization.k8s.io/aggregate-to-view: "true"
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
@@ -16400,7 +16554,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
@@ -16422,7 +16576,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cert-manager"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   - apiGroups: ["cert-manager.io"]
     resources: ["signers"]
@@ -16442,7 +16596,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cert-manager"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   - apiGroups: ["certificates.k8s.io"]
     resources: ["certificatesigningrequests"]
@@ -16468,7 +16622,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
 - apiGroups: ["authorization.k8s.io"]
   resources: ["subjectaccessreviews"]
@@ -16484,7 +16638,7 @@ metadata:
     app.kubernetes.io/name: cainjector
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cainjector"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16504,7 +16658,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16524,7 +16678,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16544,7 +16698,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16564,7 +16718,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16584,7 +16738,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16604,7 +16758,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16624,7 +16778,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cert-manager"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16644,7 +16798,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cert-manager"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16664,7 +16818,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -16687,7 +16841,7 @@ metadata:
     app.kubernetes.io/name: cainjector
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cainjector"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   # Used for leader election by the controller
   # cert-manager-cainjector-leader-election is used by the CertificateBased injector controller
@@ -16721,7 +16875,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
   # Used for leader election by the controller
   # See also: https://github.com/kubernetes-sigs/controller-runtime/pull/1144#discussion_r480173688
@@ -16751,7 +16905,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 rules:
 - apiGroups: [""]
   resources: ["secrets"]
@@ -16776,7 +16930,7 @@ metadata:
     app.kubernetes.io/name: cainjector
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cainjector"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -16799,7 +16953,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -16821,7 +16975,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -16843,7 +16997,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   type: ClusterIP
   ports:
@@ -16867,7 +17021,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   type: ClusterIP
   ports:
@@ -16891,7 +17045,7 @@ metadata:
     app.kubernetes.io/name: cainjector
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "cainjector"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   replicas: 1
   selector:
@@ -16906,14 +17060,14 @@ spec:
         app.kubernetes.io/name: cainjector
         app.kubernetes.io/instance: cert-manager
         app.kubernetes.io/component: "cainjector"
-        app.kubernetes.io/version: "v1.5.4"
+        app.kubernetes.io/version: "v1.6.1"
     spec:
       serviceAccountName: cert-manager-cainjector
       securityContext:
         runAsNonRoot: true
       containers:
         - name: cert-manager
-          image: "quay.io/jetstack/cert-manager-cainjector:v1.5.4"
+          image: "quay.io/jetstack/cert-manager-cainjector:v1.6.1"
           imagePullPolicy: IfNotPresent
           args:
           - --v=2
@@ -16937,7 +17091,7 @@ metadata:
     app.kubernetes.io/name: cert-manager
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "controller"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   replicas: 1
   selector:
@@ -16952,7 +17106,7 @@ spec:
         app.kubernetes.io/name: cert-manager
         app.kubernetes.io/instance: cert-manager
         app.kubernetes.io/component: "controller"
-        app.kubernetes.io/version: "v1.5.4"
+        app.kubernetes.io/version: "v1.6.1"
       annotations:
         prometheus.io/path: "/metrics"
         prometheus.io/scrape: 'true'
@@ -16963,7 +17117,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: cert-manager
-          image: "quay.io/jetstack/cert-manager-controller:v1.5.4"
+          image: "quay.io/jetstack/cert-manager-controller:v1.6.1"
           imagePullPolicy: IfNotPresent
           args:
           - --v=2
@@ -16991,7 +17145,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
 spec:
   replicas: 1
   selector:
@@ -17006,14 +17160,14 @@ spec:
         app.kubernetes.io/name: webhook
         app.kubernetes.io/instance: cert-manager
         app.kubernetes.io/component: "webhook"
-        app.kubernetes.io/version: "v1.5.4"
+        app.kubernetes.io/version: "v1.6.1"
     spec:
       serviceAccountName: cert-manager-webhook
       securityContext:
         runAsNonRoot: true
       containers:
         - name: cert-manager
-          image: "quay.io/jetstack/cert-manager-webhook:v1.5.4"
+          image: "quay.io/jetstack/cert-manager-webhook:v1.6.1"
           imagePullPolicy: IfNotPresent
           args:
           - --v=2
@@ -17063,7 +17217,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
   annotations:
     cert-manager.io/inject-ca-from-secret: "cert-manager/cert-manager-webhook-ca"
 webhooks:
@@ -17112,7 +17266,7 @@ metadata:
     app.kubernetes.io/name: webhook
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/component: "webhook"
-    app.kubernetes.io/version: "v1.5.4"
+    app.kubernetes.io/version: "v1.6.1"
   annotations:
     cert-manager.io/inject-ca-from-secret: "cert-manager/cert-manager-webhook-ca"
 webhooks:
