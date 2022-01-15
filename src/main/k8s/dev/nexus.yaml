@@ -107,7 +107,7 @@ spec:
     targetPort: 5000
 
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: dev
@@ -128,12 +128,15 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: repo
-          servicePort: 80
+          service:
+            name: repo
+            port:
+              number: 80
 
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: dev
@@ -154,6 +157,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: repo
-          servicePort: 5000
+          service:
+            name: repo
+            port:
+              number: 5000

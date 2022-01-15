@@ -47,7 +47,7 @@ spec:
         command: ["chown", "1000:1000", "/var/jenkins_home"]
       containers:
       - name: jenkins-master
-        image: jenkins/jenkins:2.319.1-jdk11
+        image: jenkins/jenkins:2.319.2-jdk11
         volumeMounts:
         - mountPath: "/var/jenkins_home"
           name: jenkins-home
@@ -91,7 +91,7 @@ spec:
     targetPort: 50000
 
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: dev
@@ -111,6 +111,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: jenkins
-          servicePort: 80
+          service:
+            name: jenkins
+            port:
+              number: 80
