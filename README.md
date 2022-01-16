@@ -8,7 +8,7 @@ cloud providers.
 
 Below are the images used for my own tracking.
 
-* `k8s.gcr.io/ingress-nginx/controller:v1.0.5`
+* `k8s.gcr.io/ingress-nginx/controller:v1.1.1`
 * `quay.io/jetstack/cert-manager-cainjector:v1.6.1`
 * `quay.io/jetstack/cert-manager-controller:v1.6.1`
 * `quay.io/jetstack/cert-manager-webhook:v1.6.1`
