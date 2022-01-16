@@ -1,31 +1,37 @@
 ---
-kind: Service
+# Source: ingress-nginx/templates/controller-service.yaml
 apiVersion: v1
+kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/do-loadbalancer-hostname: "yashkov.org"
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: 'true'
   labels:
-    helm.sh/chart: ingress-nginx-3.36.0
+    helm.sh/chart: ingress-nginx-4.0.7
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 0.49.0
+    app.kubernetes.io/version: 1.0.5
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: controller
   name: ingress-nginx-controller
   namespace: ingress-nginx
 spec:
-  externalTrafficPolicy: Local
   type: LoadBalancer
+  externalTrafficPolicy: Local
+  ipFamilyPolicy: SingleStack
+  ipFamilies:
+    - IPv4
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 80
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 443
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+      appProtocol: http
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: https
+      appProtocol: https
   selector:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
