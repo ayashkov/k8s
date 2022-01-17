@@ -13,7 +13,7 @@ spec:
       path: "/var/tmp/build-cache"
   containers:
   - name: maven
-    image: maven:3-jdk-13-alpine
+    image: maven:3-openjdk-17
     env:
     - name: MEMORY_REQUEST
       valueFrom:
