@@ -1,0 +1,42 @@
+spec:
+  volumes:
+  - name: home
+    projected:
+      sources:
+      - secret:
+          name: maven-settings
+          items:
+            - key: settings-security.xml
+              path: ".m2/settings-security.xml"
+      - configMap:
+          name: maven-settings
+          items:
+            - key: settings.xml
+              path: ".m2/settings.xml"
+      - configMap:
+          name: npm-config
+  - name: cache
+    hostPath:
+      path: "/var/tmp/build-cache"
+  containers:
+  - name: maven
+    volumeMounts:
+    - mountPath: "/root"
+      name: home
+    - mountPath: "/cache"
+      name: cache
+    image: maven:3-openjdk-17
+    imagePullPolicy: Always
+    resources:
+      requests:
+        memory: 1024Mi
+        cpu: 100m
+      limits:
+        memory: 1200Mi
+        cpu: 500m
+    env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-XX:MaxRAMPercentage=15"
+    command:
+    - "/bin/cat"
+    tty: true

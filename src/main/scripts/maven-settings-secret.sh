@@ -78,8 +78,13 @@ xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
 EOF
 
 kubectl create secret generic maven-settings \
+  -n dev \
   --from-file=$TMPDIR/settings-security.xml \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+kubectl create configmap maven-settings \
+  -n dev \
   --from-file=$TMPDIR/settings.xml \
-  --dry-run -o yaml | kubectl apply -f -
+  --dry-run=client -o yaml | kubectl apply -f -
 
 rm $TMPDIR/settings-security.xml $TMPDIR/settings.xml

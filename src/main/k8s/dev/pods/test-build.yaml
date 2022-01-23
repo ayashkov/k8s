@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: dev
+  name: test-build
+spec:
+  restartPolicy: Never
+  volumes:
+  - name: home
+    projected:
+      sources:
+      - secret:
+          name: maven-settings
+          items:
+            - key: settings-security.xml
+              path: ".m2/settings-security.xml"
+      - configMap:
+          name: maven-settings
+          items:
+            - key: settings.xml
+              path: ".m2/settings.xml"
+      - configMap:
+          name: npm-config
+  - name: workspace
+    emptyDir:
+  - name: cache
+    hostPath:
+      path: "/var/tmp/build-cache"
+  - name: registry
+    secret:
+      secretName: "registry-cred"
+      items:
+      - key: ".dockerconfigjson"
+        path: "config.json"
+  containers:
+  - name: kaniko
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: workspace
+    - mountPath: "/kaniko/.docker"
+      name: registry
+    image: gcr.io/kaniko-project/executor:debug
+    imagePullPolicy: Always
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 80Mi
+    workingDir: "/home/jenkins/agent"
+    command:
+    - "/busybox/cat"
+    tty: true
+  - name: maven
+    volumeMounts:
+    - mountPath: "/home/jenkins/agent"
+      name: workspace
+    - mountPath: "/root"
+      name: home
+    - mountPath: "/cache"
+      name: cache
+    image: maven:3-openjdk-17
+    imagePullPolicy: Always
+    resources:
+      requests:
+        memory: 1024Mi
+        cpu: 100m
+      limits:
+        memory: 1200Mi
+        cpu: 500m
+    env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-XX:MaxRAMPercentage=15"
+    workingDir: "/home/jenkins/agent"
+    command:
+    - "/bin/cat"
+    tty: true

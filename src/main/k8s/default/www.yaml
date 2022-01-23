@@ -19,7 +19,8 @@ spec:
       - name: registry-cred
       containers:
       - name: www
-        image: registry.dev.yashkov.org/yashkov/web-site:40
+        image: registry.dev.yashkov.org/yashkov/web-site:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         resources:

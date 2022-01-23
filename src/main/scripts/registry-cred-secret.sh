@@ -7,4 +7,4 @@ kubectl create secret docker-registry registry-cred \
   --docker-server=registry.dev.yashkov.org \
   --docker-username="${user}" \
   --docker-password="${password}" \
-  --dry-run -o yaml | kubectl apply -f -
+  --dry-run=client -o yaml | kubectl apply -f -

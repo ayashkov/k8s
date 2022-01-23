@@ -48,6 +48,9 @@ spec:
       containers:
       - name: jenkins-master
         image: jenkins/jenkins:2.319.2-jdk11
+        env:
+        - name: JAVA_TOOL_OPTIONS
+          value: "-XX:MaxRAMPercentage=75"
         volumeMounts:
         - mountPath: "/var/jenkins_home"
           name: jenkins-home
@@ -61,10 +64,10 @@ spec:
         resources:
           requests:
             cpu: 50m
-            memory: 600Mi
+            memory: 800Mi
           limits:
             cpu: 500m
-            memory: 600Mi
+            memory: 800Mi
   replicas: 1
 
 ---

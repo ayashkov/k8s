@@ -1,0 +1,25 @@
+spec:
+  volumes:
+  - name: registry
+    secret:
+      secretName: "registry-cred"
+      items:
+      - key: ".dockerconfigjson"
+        path: "config.json"
+  containers:
+  - name: kaniko
+    volumeMounts:
+    - mountPath: "/kaniko/.docker"
+      name: registry
+    image: gcr.io/kaniko-project/executor:debug
+    imagePullPolicy: Always
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 80Mi
+    command:
+    - "/busybox/cat"
+    tty: true

@@ -27,10 +27,23 @@ default namespace in order to work correctly:
   ```sh
   bash src/main/scripts/registry-cred-secret.sh
   ```
-* `maven-settings` — contains `settings-security.xml` and `settings.xml`
-  used by Maven to access the repository. How to create or update:
+* `maven-settings` — contains `settings-security.xml` used by Maven to
+  store master encryption key. How to create or update:
   ```sh
   bash src/main/scripts/maven-settings-secret.sh
+  ```
+
+# Required Configuration Maps
+
+* `maven-settings` — contains `settings.xml` used by Maven to access
+  the repository. How to create or update:
+  ```sh
+  bash src/main/scripts/maven-settings-secret.sh
+  ```
+* `npm-config` — contains `.npmrc` used by NPM to configure itself.
+  How to create or update:
+  ```sh
+  bash src/main/scripts/npm-config.sh
   ```
 
 # Deployment
