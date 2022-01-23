@@ -2,9 +2,9 @@ spec:
   volumes:
   - name: registry
     secret:
-      secretName: "registry-cred"
+      secretName: registry-cred
       items:
-      - key: ".dockerconfigjson"
+      - key: .dockerconfigjson
         path: "config.json"
   containers:
   - name: kaniko

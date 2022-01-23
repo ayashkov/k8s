@@ -23,14 +23,15 @@ spec:
           name: npm-config
   - name: workspace
     emptyDir:
+      medium: ""
   - name: cache
     hostPath:
       path: "/var/tmp/build-cache"
   - name: registry
     secret:
-      secretName: "registry-cred"
+      secretName: registry-cred
       items:
-      - key: ".dockerconfigjson"
+      - key: .dockerconfigjson
         path: "config.json"
   containers:
   - name: kaniko
@@ -53,10 +54,13 @@ spec:
     - "/busybox/cat"
     tty: true
   - name: maven
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
     volumeMounts:
     - mountPath: "/home/jenkins/agent"
       name: workspace
-    - mountPath: "/root"
+    - mountPath: "/home/build"
       name: home
     - mountPath: "/cache"
       name: cache
@@ -70,8 +74,10 @@ spec:
         memory: 1200Mi
         cpu: 500m
     env:
+    - name: HOME
+      value: "/home/build"
     - name: JAVA_TOOL_OPTIONS
-      value: "-XX:MaxRAMPercentage=15"
+      value: "-XX:MaxRAMPercentage=15 -Duser.home=/home/build"
     workingDir: "/home/jenkins/agent"
     command:
     - "/bin/cat"
