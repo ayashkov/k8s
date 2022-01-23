@@ -56,3 +56,17 @@ kubectl apply -f src/main/k8s/dev/permissions.yaml
 kubectl apply -f src/main/k8s/dev/jenkins.yaml
 kubectl apply -f src/main/k8s/dev/nexus.yaml
 ```
+
+# Pod Templates for Jenkins
+
+The templates to be used in Jenkins Kubernetes plugin are located under
+`src/main/k8s/dev/pods`.
+
+* `kaniko.yaml` — used to run
+  [Kaniko](https://github.com/GoogleContainerTools/kaniko) image builder;
+* `maven.yaml` — used to run [Maven](https://maven.apache.org/)
+  build tool;
+* `maven-kaniko.yaml` — a combination of the previous two (for some
+  reason multiple inheritance does not work in `Jenkinsfile`);
+* `test-build.yaml` — a test pod to be used in debugging or testing
+  of the template changes.
