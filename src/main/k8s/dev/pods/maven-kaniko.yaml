@@ -24,6 +24,8 @@ spec:
       items:
       - key: .dockerconfigjson
         path: "config.json"
+  imagePullSecrets:
+  - name: registry-cred
   containers:
   - name: maven
     securityContext:
@@ -34,7 +36,7 @@ spec:
       name: home
     - mountPath: "/cache"
       name: cache
-    image: maven:3-openjdk-17
+    image: registry.dev.yashkov.org/yashkov/maven:3.8.4-jdk17
     imagePullPolicy: Always
     resources:
       requests:
