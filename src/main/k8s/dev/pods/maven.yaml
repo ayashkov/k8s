@@ -30,7 +30,7 @@ spec:
       name: home
     - mountPath: "/cache"
       name: cache
-    image: registry.dev.yashkov.org/yashkov/maven:3.8.4-jdk17
+    image: registry.dev.yashkov.org/yashkov/maven:3.8.3.0
     imagePullPolicy: Always
     resources:
       requests:
