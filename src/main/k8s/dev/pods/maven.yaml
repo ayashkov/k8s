@@ -1,20 +1,18 @@
 spec:
   volumes:
-  - name: home
+  - name: maven
     projected:
       sources:
       - secret:
           name: maven-settings
-          items:
-            - key: settings-security.xml
-              path: ".m2/settings-security.xml"
       - configMap:
           name: maven-settings
-          items:
-            - key: settings.xml
-              path: ".m2/settings.xml"
-      - configMap:
-          name: npm-config
+  - name: npm
+    configMap:
+      name: npm-config
+  - name: home
+    emptyDir:
+      medium: ""
   - name: cache
     hostPath:
       path: "/var/tmp/build-cache"
@@ -23,11 +21,17 @@ spec:
   containers:
   - name: maven
     securityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
+      capabilities:
+        add:
+        - "SYS_ADMIN"
     volumeMounts:
     - mountPath: "/home/build"
       name: home
+    - mountPath: "/home/build/.m2"
+      name: maven
+    - mountPath: "/home/build/.npmrc"
+      name: npm
+      subPath: .npmrc
     - mountPath: "/cache"
       name: cache
     image: registry.dev.yashkov.org/yashkov/maven:3.8.3.0
