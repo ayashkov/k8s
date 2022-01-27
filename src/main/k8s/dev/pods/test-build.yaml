@@ -80,10 +80,8 @@ spec:
         memory: 1200Mi
         cpu: 500m
     env:
-    - name: HOME
-      value: "/home/build"
     - name: JAVA_TOOL_OPTIONS
-      value: "-XX:MaxRAMPercentage=15 -Duser.home=/home/build"
+      value: "-XX:MaxRAMPercentage=15"
     workingDir: "/home/jenkins/agent"
     command:
     - "/bin/cat"
