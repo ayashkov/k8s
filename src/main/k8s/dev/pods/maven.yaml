@@ -34,7 +34,7 @@ spec:
       subPath: .npmrc
     - mountPath: "/cache"
       name: cache
-    image: registry.dev.yashkov.org/yashkov/maven:3.8.3.0
+    image: registry.dev.yashkov.org/yashkov/maven:3.8.3.3
     imagePullPolicy: Always
     resources:
       requests:
