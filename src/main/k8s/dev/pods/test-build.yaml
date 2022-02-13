@@ -22,9 +22,9 @@ spec:
   - name: workspace
     emptyDir:
       medium: ""
-  - name: cache
+  - name: tmp
     hostPath:
-      path: "/var/tmp/build-cache"
+      path: "/var/tmp"
   - name: registry
     secret:
       secretName: registry-cred
@@ -40,6 +40,8 @@ spec:
       name: workspace
     - mountPath: "/kaniko/.docker"
       name: registry
+    - mountPath: "/var/tmp"
+      name: tmp
     image: gcr.io/kaniko-project/executor:debug
     imagePullPolicy: Always
     resources:
@@ -68,8 +70,8 @@ spec:
     - mountPath: "/home/build/.npmrc"
       name: npm
       subPath: .npmrc
-    - mountPath: "/cache"
-      name: cache
+    - mountPath: "/var/tmp"
+      name: tmp
     image: registry.dev.yashkov.org/yashkov/maven:3.8.3.3
     imagePullPolicy: Always
     resources:

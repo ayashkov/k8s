@@ -23,11 +23,11 @@ metadata:
     app: jenkins
     role: master
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: jenkins
       role: master
-  replicas: 1
   strategy:
     type: Recreate
   template:
@@ -50,7 +50,7 @@ spec:
         command: ["chown", "1000:1000", "/var/jenkins_home"]
       containers:
       - name: jenkins-master
-        image: jenkins/jenkins:2.319.2-jdk11
+        image: jenkins/jenkins:2.319.3-jdk11
         env:
         - name: JAVA_OPTS
           value: "-XX:MaxRAMPercentage=75 -Dhudson.model.DirectoryBrowserSupport.CSP=\"default-src 'none'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self';\""

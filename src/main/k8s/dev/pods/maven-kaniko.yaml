@@ -13,9 +13,9 @@ spec:
   - name: home
     emptyDir:
       medium: ""
-  - name: cache
+  - name: tmp
     hostPath:
-      path: "/var/tmp/build-cache"
+      path: "/var/tmp"
   - name: registry
     secret:
       secretName: registry-cred
@@ -38,8 +38,8 @@ spec:
     - mountPath: "/home/build/.npmrc"
       name: npm
       subPath: .npmrc
-    - mountPath: "/cache"
-      name: cache
+    - mountPath: "/var/tmp"
+      name: tmp
     image: registry.dev.yashkov.org/yashkov/maven:3.8.3.3
     imagePullPolicy: Always
     resources:

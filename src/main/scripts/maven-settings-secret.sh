@@ -15,7 +15,7 @@ epass=`mvn -Dsettings.security=$TMPDIR/settings-security.xml -ep "$password"` ca
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
     https://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <localRepository>/cache/maven</localRepository>
+  <localRepository>/var/tmp/maven</localRepository>
   <interactiveMode>false</interactiveMode>
   <servers>
     <server>

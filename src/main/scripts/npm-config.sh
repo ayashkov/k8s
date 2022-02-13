@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cat > $TMPDIR/.npmrc <<EOF
-cache=/cache/npm
+cache=/var/tmp/npm
 EOF
 
 kubectl create configmap npm-config \
