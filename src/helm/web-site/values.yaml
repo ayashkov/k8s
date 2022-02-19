@@ -1,0 +1,46 @@
+# Default values for site.
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  registry: registry.dev.yashkov.org/yashkov
+  name: ""
+  tag: ""
+  pullPolicy: Always
+
+imagePullSecrets: []
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  domain: ""
+  tlsSecret: ""
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 50Mi
+  limits:
+    cpu: 100m
+    memory: 100Mi
+
+replicaCount: 0
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80

@@ -1,0 +1,20 @@
+imagePullSecrets:
+- name: registry-cred
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: lets-encrypt-prod
+  hosts:
+  - yashkov.org
+  - www.yashkov.org
+  domain: ""
+  tlsSecret: yashkov-org-tls
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
