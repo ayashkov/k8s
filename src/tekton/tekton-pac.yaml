@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    pipelines-as-code/route: controller
+    app: tekton
+  name: tekton-pac
+  namespace: pipelines-as-code
+  annotations:
+    cert-manager.io/cluster-issuer: lets-encrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - tekton.dev.yashkov.org
+      secretName: tekton-dev-yashkov-org-ingress
+  rules:
+    - host: tekton.dev.yashkov.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pipelines-as-code-controller
+                port:
+                  number: 8080
