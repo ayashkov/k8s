@@ -21,23 +21,23 @@ spec:
   {{- end }}
   {{- if .Values.ingress.tlsSecret }}
   tls:
-  - secretName: {{ .Values.ingress.tlsSecret }}
-    hosts:
-    {{- range $hosts }}
-    - {{ . }}
-    {{- end }}
+    - secretName: {{ .Values.ingress.tlsSecret }}
+      hosts:
+        {{- range $hosts }}
+        - {{ . }}
+        {{- end }}
   {{- end }}
   rules:
-  {{- range $hosts }}
-  - host: {{ . }}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ $fullName }}
-            port:
-              number: {{ $svcPort }}
-  {{- end }}
+    {{- range $hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+    {{- end }}
 {{- end }}

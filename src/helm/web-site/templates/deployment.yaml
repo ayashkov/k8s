@@ -13,36 +13,36 @@ spec:
       {{- include "web-site.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.pod.annotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "web-site.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- with .Values.pod.imagePullSecrets }}
       imagePullSecrets:
-      {{- toYaml . | nindent 6 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.pod.securityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
-        image: {{ include "web-site.image" . | quote }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-        - name: http
-          protocol: TCP
-          containerPort: 80
-        livenessProbe:
-          httpGet:
-            path: /
-            port: http
-        readinessProbe:
-          httpGet:
-            path: /
-            port: http
-        resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ include "web-site.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

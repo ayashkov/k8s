@@ -4,16 +4,15 @@ nameOverride: ""
 fullnameOverride: ""
 
 image:
-  registry: registry.dev.yashkov.org/yashkov
+  registry: gitea.dev.yashkov.org/yashkov
   name: ""
   tag: ""
   pullPolicy: Always
 
-imagePullSecrets: []
-
-podAnnotations: {}
-
-podSecurityContext: {}
+pod:
+  imagePullSecrets: []
+  annotations: {}
+  securityContext: {}
 
 securityContext: {}
 
@@ -37,7 +36,7 @@ resources:
     cpu: 100m
     memory: 100Mi
 
-replicaCount: 0
+replicaCount: 1
 autoscaling:
   enabled: false
   minReplicas: 2
