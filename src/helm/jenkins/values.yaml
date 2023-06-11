@@ -1,0 +1,49 @@
+# Default values for site.
+
+nameOverride: ""
+fullnameOverride: ""
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: ""
+
+image:
+  name: ""
+  tag: ""
+  pullPolicy: Always
+
+imagePullSecrets: []
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+storage:
+  className: do-block-storage
+  request: 2Gi
+
+service:
+  type: ClusterIP
+  httpPort: 80
+  jnlpPort: 50000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  domain: ""
+  tlsSecret: ""
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 800Mi
+  limits:
+    cpu: 500m
+    memory: 800Mi

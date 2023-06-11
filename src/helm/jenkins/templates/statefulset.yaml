@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "jenkins.fullname" . }}
+  labels:
+    {{- include "jenkins.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  serviceName: {{ include "jenkins.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "jenkins.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "jenkins.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "jenkins.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        volumeMounts:
+        - name: {{ include "jenkins.fullname" . }}-home
+          mountPath: /var/jenkins_home
+        image: {{ include "jenkins.image" . | quote }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 8080
+        - name: jnlp
+          protocol: TCP
+          containerPort: 50000
+        livenessProbe:
+          httpGet:
+            path: /login
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: http
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ include "jenkins.fullname" . }}-home
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: {{ .Values.storage.className }}
+      volumeMode: Filesystem
+      resources:
+        requests:
+          storage: {{ .Values.storage.request }}

@@ -30,7 +30,7 @@ spec:
       - name: {{ .Chart.Name }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
-        image: "{{ include "web-site.image" . }}"
+        image: {{ include "web-site.image" . | quote }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http

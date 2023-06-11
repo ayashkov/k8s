@@ -1,0 +1,43 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "jenkins.fullname" . -}}
+{{- $httpPort := .Values.service.httpPort -}}
+{{- $hosts := .Values.ingress.hosts -}}
+{{- if .Values.ingress.domain -}}
+{{- $hosts = append $hosts (printf "%s.%s" $fullName .Values.ingress.domain) -}}
+{{- end -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "jenkins.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.tlsSecret }}
+  tls:
+  - secretName: {{ .Values.ingress.tlsSecret }}
+    hosts:
+    {{- range $hosts }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+  rules:
+  {{- range $hosts }}
+  - host: {{ . }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $fullName }}
+            port:
+              number: {{ $httpPort }}
+  {{- end }}
+{{- end }}

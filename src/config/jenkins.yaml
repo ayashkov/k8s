@@ -1,0 +1,10 @@
+imagePullSecrets:
+- name: registry-cred
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: lets-encrypt-prod
+  domain: dev.yashkov.org
+  tlsSecret: jenkins-dev-yashkov-org-tls
