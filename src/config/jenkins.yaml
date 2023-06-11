@@ -1,5 +1,6 @@
-imagePullSecrets:
-  - name: registry-cred
+serviceAccount:
+  imagePullSecrets:
+    - name: registry-cred
 
 storage:
   className: do-block-storage

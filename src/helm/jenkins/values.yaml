@@ -16,13 +16,20 @@ image:
   tag: ""
   pullPolicy: Always
 
-imagePullSecrets: []
-
-podAnnotations: {}
-
-podSecurityContext: {}
+pod:
+  imagePullSecrets: []
+  annotations: {}
+  securityContext: {}
 
 securityContext: {}
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 800Mi
+  limits:
+    cpu: 500m
+    memory: 800Mi
 
 storage:
   # className: do-block-storage
@@ -38,13 +45,5 @@ ingress:
   className: ""
   annotations: {}
   hosts: []
-  domain: ""
+  domain: local
   tlsSecret: ""
-
-resources:
-  requests:
-    cpu: 50m
-    memory: 800Mi
-  limits:
-    cpu: 500m
-    memory: 800Mi
