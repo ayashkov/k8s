@@ -42,6 +42,9 @@ gitea:
     username: gitea
     password: <REPLACE>
     email: alexei.yashkov@yashkov.org
+  config:
+    service:
+      DISABLE_REGISTRATION: true
 
 postgresql:
   enabled: true
