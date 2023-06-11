@@ -9,5 +9,5 @@ roleRef:
   kind: Role
   name: {{ include "jenkins.fullname" . }}
 subjects:
-- kind: ServiceAccount
-  name: {{ include "jenkins.serviceAccountName" . }}
+  - kind: ServiceAccount
+    name: {{ include "jenkins.serviceAccountName" . }}

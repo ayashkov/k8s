@@ -1,5 +1,5 @@
 apiVersion: v2
 name: jenkins
 description: Jenkins continuous integration server
-version: 1.0.0-SNAPSHOT
+version: 2.387.3
 appVersion: "2.387.3-jdk17"

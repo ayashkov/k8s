@@ -9,6 +9,7 @@ rbac:
 serviceAccount:
   create: true
   name: ""
+  imagePullSecrets: []
 
 image:
   name: ""
@@ -24,8 +25,8 @@ podSecurityContext: {}
 securityContext: {}
 
 storage:
-  className: do-block-storage
-  request: 2Gi
+  # className: do-block-storage
+  request: 1Gi
 
 service:
   type: ClusterIP

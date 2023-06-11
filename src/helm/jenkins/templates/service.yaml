@@ -7,13 +7,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-  - name: http
-    protocol: TCP
-    port: {{ .Values.service.httpPort }}
-    targetPort: http
-  - name: jnlp
-    protocol: TCP
-    port: {{ .Values.service.jnlpPort }}
-    targetPort: jnlp
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.httpPort }}
+      targetPort: http
+    - name: jnlp
+      protocol: TCP
+      port: {{ .Values.service.jnlpPort }}
+      targetPort: jnlp
   selector:
     {{- include "jenkins.selectorLabels" . | nindent 4 }}

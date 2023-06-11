@@ -1,5 +1,9 @@
 imagePullSecrets:
-- name: registry-cred
+  - name: registry-cred
+
+storage:
+  className: do-block-storage
+  request: 2Gi
 
 ingress:
   enabled: true

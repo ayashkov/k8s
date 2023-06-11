@@ -1,3 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "jenkins.fullname" . }}-set
+  labels:
+    {{- include "jenkins.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.service.httpPort }}
+      targetPort: http
+  selector:
+    {{- include "jenkins.selectorLabels" . | nindent 4 }}
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -6,7 +23,7 @@ metadata:
     {{- include "jenkins.labels" . | nindent 4 }}
 spec:
   replicas: 1
-  serviceName: {{ include "jenkins.fullname" . }}
+  serviceName: {{ include "jenkins.fullname" . }}-set
   selector:
     matchLabels:
       {{- include "jenkins.selectorLabels" . | nindent 6 }}
@@ -27,39 +44,41 @@ spec:
       {{- toYaml . | nindent 6 }}
       {{- end }}
       containers:
-      - name: {{ .Chart.Name }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
-        volumeMounts:
-        - name: {{ include "jenkins.fullname" . }}-home
-          mountPath: /var/jenkins_home
-        image: {{ include "jenkins.image" . | quote }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-        - name: http
-          protocol: TCP
-          containerPort: 8080
-        - name: jnlp
-          protocol: TCP
-          containerPort: 50000
-        livenessProbe:
-          httpGet:
-            path: /login
-            port: http
-        readinessProbe:
-          httpGet:
-            path: /login
-            port: http
-        resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          volumeMounts:
+            - name: home
+              mountPath: /var/jenkins_home
+          image: {{ include "jenkins.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 8080
+            - name: jnlp
+              protocol: TCP
+              containerPort: 50000
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
   volumeClaimTemplates:
-  - metadata:
-      name: {{ include "jenkins.fullname" . }}-home
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      storageClassName: {{ .Values.storage.className }}
-      volumeMode: Filesystem
-      resources:
-        requests:
-          storage: {{ .Values.storage.request }}
+    - metadata:
+        name: home
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- with .Values.storage.className }}
+        storageClassName: {{ . }}
+        {{- end }}
+        volumeMode: Filesystem
+        resources:
+          requests:
+            storage: {{ .Values.storage.request }}
