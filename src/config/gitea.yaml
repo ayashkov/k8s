@@ -1,0 +1,58 @@
+# Default values for gitea.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  storageClass: do-block-storage
+
+image:
+  rootless: true
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: lets-encrypt-prod
+  hosts:
+    - host: gitea.dev.yashkov.org
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: gitea-dev-yashkov-org-tls
+      hosts:
+        - gitea.dev.yashkov.org
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+persistence:
+  size: 10Gi
+
+## @section Gitea
+#
+gitea:
+  admin:
+    username: gitea
+    password: <REPLACE>
+    email: alexei.yashkov@yashkov.org
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        database: gitea
+        username: gitea
+        password: <REPLACE>
+      service:
+        ports:
+          postgresql: 5432
+  primary:
+    persistence:
+      size: 2Gi
