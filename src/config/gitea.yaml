@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# export POSTGRES_PASSWORD=$(kubectl get secret --namespace "dev" gitea-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+# helm upgrade gitea gitea/gitea -f src/config/gitea.yaml --set gitea.admin.password=XXXXXXXX --set postgresql.global.postgresql.auth.password=XXXXXXXX --set global.postgresql.auth.postgresPassword=$POSTGRES_PASSWORD
+
 global:
   storageClass: do-block-storage
 
@@ -26,11 +29,11 @@ ingress:
 
 resources:
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 500m
+    memory: 512Mi
   requests:
     cpu: 100m
-    memory: 128Mi
+    memory: 256Mi
 
 persistence:
   size: 10Gi
